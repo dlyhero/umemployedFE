@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { getFeaturedPosts } from '@/lib/blogData'
@@ -9,6 +9,13 @@ import Link from 'next/link'
 const BlogSection: React.FC = () => {
   const router = useRouter()
   const blogPosts = getFeaturedPosts()
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set())
+
+  // Debug logging for production
+  React.useEffect(() => {
+    console.log('BlogSection rendered with posts:', blogPosts.length);
+    console.log('Image URLs:', blogPosts.map(p => p.imageUrl));
+  }, [blogPosts])
 
   return (
     <section className="px-4 md:px-6 bg-gray-50">
@@ -22,20 +29,40 @@ const BlogSection: React.FC = () => {
             Discover More
           </button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {blogPosts.map((post) => (
             <Link 
               key={post.id} 
               href={`/blog/${post.id}`}
-              className="group bg-white  overflow-hidden  transition-all duration-300"
+              className="group bg-white rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg"
             >
-              <div className="relative h-48">
-                <Image
-                  src={post.imageUrl}
-                  alt={post.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+              <div className="relative h-48 w-full bg-gray-200 min-h-[192px]">
+                {!imageErrors.has(post.id) ? (
+                  <Image
+                    src={post.imageUrl}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    priority={false}
+                    quality={80}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    onError={() => {
+                      console.error('Image failed to load:', post.imageUrl);
+                      setImageErrors(prev => new Set(prev).add(post.id));
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-brand/20 to-brand/40 flex items-center justify-center">
+                    <Icon icon="solar:image-bold" className="w-16 h-16 text-brand/60" />
+                  </div>
+                )}
                 <div className="absolute top-4 left-4">
                   <span className="bg-brand text-white px-3 py-1 rounded-full text-sm font-medium">
                     {post.category}
