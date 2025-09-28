@@ -39,10 +39,16 @@ export default function PasswordResetPage({ params }: PasswordResetPageProps) {
     });
   }, [params]);
 
+  // Only redirect if we have attempted to extract params and they are still empty
   useEffect(() => {
-    if (!uid || !token) {
-      router.push('/login');
-    }
+    // Add a small delay to ensure params have been processed
+    const timer = setTimeout(() => {
+      if (!uid || !token) {
+        router.push('/login');
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [uid, token, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
