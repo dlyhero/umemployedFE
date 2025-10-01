@@ -2,16 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { toast } from 'sonner';
 import { useCompanyDetails } from '@/hooks/companies/useCompanyDetails';
 import { useCompanyUpdate } from '@/hooks/companies/useCompanyUpdate';
 import { stripHtmlTags, getCountryName, getCountryFlag } from '@/lib/textUtils';
+import GoogleMeetStatus from '@/components/GoogleMeetStatus';
 
 export default function CompanyUpdatePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     name: '',
     industry: '',
@@ -28,6 +30,18 @@ export default function CompanyUpdatePage() {
     video_introduction: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Check for Google OAuth success
+  useEffect(() => {
+    const googleOAuth = searchParams.get('google_oauth');
+    if (googleOAuth === 'success') {
+      toast.success('Google Calendar Connected!', {
+        description: 'You can now schedule Google Meet interviews with automatic calendar integration.',
+      });
+      // Clean up the URL
+      router.replace('/companies/update');
+    }
+  }, [searchParams, router]);
 
   // Check authentication and role
   useEffect(() => {
@@ -548,6 +562,37 @@ export default function CompanyUpdatePage() {
                     className="w-full pl-3 pr-4 py-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand transition-colors"
                     placeholder="https://youtube.com/watch?v=..."
                   />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Google Meet Integration Section */}
+          <div className="bg-white rounded-2xl p-6 border border-gray-100">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Icon icon="logos:google-meet" className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-xl tracking-wider font-bold text-gray-900">Google Meet Integration</h2>
+                <p className="text-sm md:text-[16px] mb-2 text-gray-600">Connect your Google Calendar for automatic interview scheduling</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <GoogleMeetStatus />
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <Icon icon="solar:info-circle-bold" className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div className="text-sm text-blue-800">
+                    <p className="font-medium mb-1">Benefits of Google Meet Integration:</p>
+                    <ul className="space-y-1 text-blue-700">
+                      <li>• Automatic calendar event creation for interviews</li>
+                      <li>• Google Meet links generated automatically</li>
+                      <li>• Email invitations sent to candidates</li>
+                      <li>• Seamless interview scheduling workflow</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

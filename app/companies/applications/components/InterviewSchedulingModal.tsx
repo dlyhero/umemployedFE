@@ -7,6 +7,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { useSession } from 'next-auth/react';
 import { handleApiError, showSuccessMessage } from '@/lib/errorHandling';
+import { 
+  useGoogleMeetConnection, 
+  useCreateGoogleMeetInterview,
+  CreateGoogleMeetInterviewData 
+} from '@/hooks/companies/useGoogleMeet';
+import { toast } from 'sonner';
 
 interface InterviewSchedulingModalProps {
   candidate: ApplicationCandidate;
@@ -23,6 +29,13 @@ const InterviewSchedulingModal: React.FC<InterviewSchedulingModalProps> = ({
 }) => {
   const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [interviewType, setInterviewType] = useState<'phone' | 'google_meet' | 'in_person'>('google_meet');
+  const [showConnectPrompt, setShowConnectPrompt] = useState(false);
+  
+  // Google Meet hooks
+  const { data: googleConnection, isLoading: checkingConnection } = useGoogleMeetConnection();
+  const createGoogleMeetInterview = useCreateGoogleMeetInterview();
+  
   const [formData, setFormData] = useState({
     date: '',
     time: '',
@@ -46,65 +59,124 @@ const InterviewSchedulingModal: React.FC<InterviewSchedulingModalProps> = ({
     }));
   };
 
+  const handleConnectGoogle = async () => {
+    if (!session?.user?.accessToken) {
+      toast.error('Authentication required', {
+        description: 'Please sign in to connect your Google account.',
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/google/auth-url/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${session.user.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.authorization_url) {
+          // Redirect to Google OAuth
+          window.location.href = data.authorization_url;
+        } else {
+          throw new Error('No authorization URL received');
+        }
+      } else {
+        throw new Error(`HTTP ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error connecting to Google:', error);
+      toast.error('Failed to connect to Google', {
+        description: 'Please try again or contact support if the issue persists.',
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.date || !formData.time || !formData.timezone) {
-      alert('Please fill in all required fields');
+      toast.error('Please fill in all required fields');
       return;
     }
 
     if (!session?.user?.companyId) {
-      alert('Company information not found. Please try again.');
+      toast.error('Company information not found. Please try again.');
       return;
     }
 
     if (!jobId || jobId === 'null' || jobId === 'undefined' || jobId === '') {
-      alert('Job information not found. Please select a job first.');
+      toast.error('Job information not found. Please select a job first.');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const interviewData = {
-        candidate_id: candidate.user_id,
-        job_id: jobId,
-        company_id: session?.user?.companyId,
-        date: formData.date,
-        time: formData.time,
-        timezone: formData.timezone,
-        notes: formData.notes
-      };
+      if (interviewType === 'google_meet') {
+        // Check Google Meet connection first
+        if (!googleConnection?.connected) {
+          setShowConnectPrompt(true);
+          return;
+        }
 
-      console.log('Scheduling interview with data:', interviewData);
-      console.log('Job ID from props:', jobId);
-      console.log('Job ID type:', typeof jobId);
-      console.log('API URL:', `${process.env.NEXT_PUBLIC_API_URL}/company/create-interview/`);
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/create-interview/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.user?.accessToken}`,
-        },
-        body: JSON.stringify(interviewData)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const error = new Error(errorData.error || `Failed to schedule interview: ${response.status}`);
-        (error as any).response = { 
-          status: response.status,
-          data: errorData 
+        // Use Google Meet API
+        const interviewData: CreateGoogleMeetInterviewData = {
+          candidate_id: candidate.user_id,
+          job_id: parseInt(jobId),
+          company_id: parseInt(session?.user?.companyId),
+          date: formData.date,
+          time: formData.time,
+          timezone: formData.timezone,
+          notes: formData.notes,
+          interview_type: 'google_meet'
         };
-        throw error;
-      }
 
-      const result = await response.json();
-      console.log('Interview scheduled successfully:', result);
-      
-      showSuccessMessage(`Interview scheduled successfully for ${candidate.full_name}`, 'The candidate has been notified about the interview');
+        const result = await createGoogleMeetInterview.mutateAsync(interviewData);
+        
+        showSuccessMessage(
+          `Google Meet interview scheduled successfully for ${candidate.full_name}`, 
+          `Meeting link: ${result.meeting_link}. Both parties have been notified with calendar invitations.`
+        );
+        
+      } else {
+        // Use regular interview API for phone/in-person
+        const interviewData = {
+          candidate_id: candidate.user_id,
+          job_id: jobId,
+          company_id: session?.user?.companyId,
+          date: formData.date,
+          time: formData.time,
+          timezone: formData.timezone,
+          notes: formData.notes,
+          interview_type: interviewType
+        };
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/create-interview/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.user?.accessToken}`,
+          },
+          body: JSON.stringify(interviewData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const error = new Error(errorData.error || `Failed to schedule interview: ${response.status}`);
+          (error as any).response = { 
+            status: response.status,
+            data: errorData 
+          };
+          throw error;
+        }
+
+        const result = await response.json();
+        showSuccessMessage(`Interview scheduled successfully for ${candidate.full_name}`, 'The candidate has been notified about the interview');
+      }
       
       // Reset form and close modal
       setFormData({
@@ -153,6 +225,123 @@ const InterviewSchedulingModal: React.FC<InterviewSchedulingModalProps> = ({
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Interview Type Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Interview Type *
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setInterviewType('google_meet')}
+                  className={`p-4 border-2 rounded-lg text-left transition-all ${
+                    interviewType === 'google_meet'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon 
+                      icon="logos:google-meet" 
+                      className={`w-6 h-6 ${interviewType === 'google_meet' ? 'text-blue-600' : 'text-gray-500'}`} 
+                    />
+                    <div>
+                      <div className="font-medium text-gray-900">Google Meet</div>
+                      <div className="text-sm text-gray-600">Video call with calendar integration</div>
+                    </div>
+                  </div>
+                  {!googleConnection?.connected && (
+                    <div className="mt-2 text-xs text-orange-600 flex items-center gap-1">
+                      <Icon icon="solar:danger-triangle-bold" className="w-3 h-3" />
+                      Google account required
+                    </div>
+                  )}
+                  {googleConnection?.connected && (
+                    <div className="mt-2 text-xs text-green-600 flex items-center gap-1">
+                      <Icon icon="solar:check-circle-bold" className="w-3 h-3" />
+                      Google account connected
+                    </div>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setInterviewType('phone')}
+                  className={`p-4 border-2 rounded-lg text-left transition-all ${
+                    interviewType === 'phone'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon 
+                      icon="solar:phone-bold" 
+                      className={`w-6 h-6 ${interviewType === 'phone' ? 'text-blue-600' : 'text-gray-500'}`} 
+                    />
+                    <div>
+                      <div className="font-medium text-gray-900">Phone Call</div>
+                      <div className="text-sm text-gray-600">Traditional phone interview</div>
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setInterviewType('in_person')}
+                  className={`p-4 border-2 rounded-lg text-left transition-all ${
+                    interviewType === 'in_person'
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon 
+                      icon="solar:users-group-rounded-bold" 
+                      className={`w-6 h-6 ${interviewType === 'in_person' ? 'text-blue-600' : 'text-gray-500'}`} 
+                    />
+                    <div>
+                      <div className="font-medium text-gray-900">In-Person</div>
+                      <div className="text-sm text-gray-600">Face-to-face meeting</div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Google Meet Connection Prompt */}
+            {interviewType === 'google_meet' && !googleConnection?.connected && (
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <Icon icon="solar:danger-triangle-bold" className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="font-medium text-orange-800 mb-2">Google Account Required</h4>
+                    <p className="text-sm text-orange-700 mb-3">
+                      To schedule Google Meet interviews, you need to connect your Google account first. 
+                      This enables automatic calendar integration and meeting link generation.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        onClick={handleConnectGoogle}
+                        className="bg-orange-600 hover:bg-orange-700 text-white text-sm px-4 py-2"
+                      >
+                        <Icon icon="logos:google-meet" className="w-4 h-4 mr-2" />
+                        Connect Google Account
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setInterviewType('phone')}
+                        className="text-sm px-4 py-2"
+                      >
+                        Use Phone Instead
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Interview Date */}
               <div>
@@ -240,7 +429,7 @@ const InterviewSchedulingModal: React.FC<InterviewSchedulingModalProps> = ({
               <Button
                 type="submit"
                 className="flex-1 bg-brand hover:bg-brand/90"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (interviewType === 'google_meet' && !googleConnection?.connected)}
               >
                 {isSubmitting ? (
                   <>
@@ -249,8 +438,22 @@ const InterviewSchedulingModal: React.FC<InterviewSchedulingModalProps> = ({
                   </>
                 ) : (
                   <>
-                    <Icon icon="solar:calendar-bold" className="w-4 h-4 mr-2" />
-                    Schedule Interview
+                    {interviewType === 'google_meet' && !googleConnection?.connected ? (
+                      <>
+                        <Icon icon="solar:lock-bold" className="w-4 h-4 mr-2" />
+                        Connect Google to Continue
+                      </>
+                    ) : interviewType === 'google_meet' ? (
+                      <>
+                        <Icon icon="logos:google-meet" className="w-4 h-4 mr-2" />
+                        Schedule Google Meet Interview
+                      </>
+                    ) : (
+                      <>
+                        <Icon icon="solar:calendar-bold" className="w-4 h-4 mr-2" />
+                        Schedule Interview
+                      </>
+                    )}
                   </>
                 )}
               </Button>

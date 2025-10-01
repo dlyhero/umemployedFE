@@ -7,10 +7,13 @@ import HomeHeader from '../(Home)/Components/HomeHeader';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { createPortal } from 'react-dom';
+import { useGoogleMeetConnection } from '@/hooks/companies/useGoogleMeet';
+import { useSearchParams } from 'next/navigation';
 
 export default function AccountSettingsPage() {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState<'security' | 'billing' | 'danger'>('security');
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'security' | 'integrations' | 'billing' | 'danger'>('security');
 
   // Form states
   const [passwordData, setPasswordData] = useState({
@@ -23,6 +26,25 @@ export default function AccountSettingsPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEmailConfirmModal, setShowEmailConfirmModal] = useState(false);
   const [emailConfirmation, setEmailConfirmation] = useState('');
+
+  // Google Meet connection
+  const { data: googleConnection, isLoading: checkingGoogleConnection } = useGoogleMeetConnection();
+
+  // Check for Google OAuth success
+  useEffect(() => {
+    const googleOAuth = searchParams.get('google_oauth');
+    if (googleOAuth === 'success') {
+      toast.success('Google Calendar Connected!', {
+        description: 'You can now schedule Google Meet interviews with automatic calendar integration.',
+      });
+      // Switch to integrations tab to show the success
+      setActiveTab('integrations');
+      // Clean up the URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('google_oauth');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, [searchParams]);
 
   // Modal effects
   useEffect(() => {
@@ -52,6 +74,7 @@ export default function AccountSettingsPage() {
 
   const tabs = [
     { id: 'security', label: 'Security', icon: 'material-symbols:lock-outline' },
+    { id: 'integrations', label: 'Integrations', icon: 'material-symbols:extension-outline' },
     { id: 'billing', label: 'Billing', icon: 'material-symbols:credit-card-outline' },
     { id: 'danger', label: 'Danger Zone', icon: 'material-symbols:warning-outline' },
   ];
@@ -152,6 +175,42 @@ export default function AccountSettingsPage() {
     } finally {
       setIsLoading(false);
       setEmailConfirmation('');
+    }
+  };
+
+  const handleConnectGoogle = async () => {
+    if (!session?.user?.accessToken) {
+      toast.error('Authentication required', {
+        description: 'Please sign in to connect your Google account.',
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/google/auth-url/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${session.user.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.authorization_url) {
+          // Redirect to Google OAuth
+          window.location.href = data.authorization_url;
+        } else {
+          throw new Error('No authorization URL received');
+        }
+      } else {
+        throw new Error(`HTTP ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error connecting to Google:', error);
+      toast.error('Failed to connect to Google', {
+        description: 'Please try again or contact support if the issue persists.',
+      });
     }
   };
 
@@ -286,6 +345,99 @@ export default function AccountSettingsPage() {
                     </button>
                   </div>
                 </form>
+              </div>
+            )}
+
+            {/* Integrations Tab */}
+            {activeTab === 'integrations' && (
+              <div className="p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4 sm:mb-6">Third-Party Integrations</h2>
+
+                <div className="space-y-6">
+                  {/* Google Meet Integration */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Icon icon="logos:google-meet" className="w-8 h-8 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">Google Meet Integration</h3>
+                          <p className="text-gray-600 mb-4">
+                            Connect your Google account to enable automatic Google Meet scheduling for interviews.
+                            This allows you to create calendar events and generate meeting links automatically.
+                          </p>
+                          
+                          {/* Connection Status */}
+                          <div className="flex items-center gap-2 mb-4">
+                            {checkingGoogleConnection ? (
+                              <div className="flex items-center gap-2">
+                                <Icon icon="eos-icons:loading" className="w-4 h-4 animate-spin text-gray-500" />
+                                <span className="text-sm text-gray-600">Checking connection...</span>
+                              </div>
+                            ) : googleConnection?.connected ? (
+                              <div className="flex items-center gap-2">
+                                <Icon icon="solar:check-circle-bold" className="w-5 h-5 text-green-600" />
+                                <span className="text-sm text-green-700 font-medium">Connected</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <Icon icon="solar:danger-triangle-bold" className="w-5 h-5 text-orange-600" />
+                                <span className="text-sm text-orange-700 font-medium">Not Connected</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Benefits List */}
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                            <h4 className="font-medium text-blue-900 mb-2">Benefits of Google Meet Integration:</h4>
+                            <ul className="text-sm text-blue-800 space-y-1">
+                              <li>• Automatic calendar event creation for interviews</li>
+                              <li>• Google Meet links generated automatically</li>
+                              <li>• Email invitations sent to candidates</li>
+                              <li>• Seamless interview scheduling workflow</li>
+                              <li>• Integration with your existing Google Calendar</li>
+                            </ul>
+                          </div>
+
+                          {/* Action Button */}
+                          <div className="flex gap-3">
+                            {googleConnection?.connected ? (
+                              <div className="flex items-center gap-2 text-green-700">
+                                <Icon icon="solar:check-circle-bold" className="w-5 h-5" />
+                                <span className="text-sm font-medium">Google account is connected and ready to use</span>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={handleConnectGoogle}
+                                className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors flex items-center gap-2"
+                              >
+                                <Icon icon="logos:google-meet" className="w-4 h-4" />
+                                Connect Google Account
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Future Integrations Placeholder */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <Icon icon="material-symbols:extension-outline" className="w-8 h-8 text-gray-500" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">More Integrations Coming Soon</h3>
+                        <p className="text-gray-600">
+                          We're working on adding more integrations to make your experience even better.
+                          Stay tuned for updates!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
