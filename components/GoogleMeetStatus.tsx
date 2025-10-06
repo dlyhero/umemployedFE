@@ -63,7 +63,7 @@ const GoogleMeetStatus: React.FC<GoogleMeetStatusProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={`p-4 ${className}`}>
+      <Card className={`p-4 ${className} shadow-none border-0`}>
         <div className="flex items-center gap-3">
           <Icon icon="eos-icons:loading" className="w-5 h-5 animate-spin text-gray-500" />
           <span className="text-sm text-gray-600">Checking Google Meet connection...</span>
