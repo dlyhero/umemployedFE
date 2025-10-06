@@ -176,6 +176,7 @@ const Skills: React.FC = () => {
                 <div className="bg-brand/10 text-sm md:text-[16px] text-brand px-8 py-3 rounded-full flex items-center gap-2">
                   <span className="">{skill.name}</span>
                   <button
+                    type="button"
                     onClick={() => handleDelete(skill.id)}
                     className="ml-1 text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
                     disabled={isDeleting}

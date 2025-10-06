@@ -36,6 +36,27 @@ const CreateCompanyPage: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
+    // Smooth mask for founded date: enforce MM/DD/YYYY with digits and slashes
+    if (name === 'founded') {
+      // Strip non-digits
+      const digitsOnly = value.replace(/\D/g, '').slice(0, 8);
+      let masked = digitsOnly;
+      if (digitsOnly.length >= 3 && digitsOnly.length <= 4) {
+        masked = `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(2)}`;
+      } else if (digitsOnly.length >= 5 && digitsOnly.length <= 6) {
+        masked = `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(2, 4)}/${digitsOnly.slice(4)}`;
+      } else if (digitsOnly.length >= 7 && digitsOnly.length <= 8) {
+        masked = `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(2, 4)}/${digitsOnly.slice(4, 8)}`;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: masked,
+      }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -52,10 +73,24 @@ const CreateCompanyPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Parse founded as year from MM/DD/YYYY if present
+    let foundedYear: number | null = null;
+    if (formData.founded) {
+      const digits = formData.founded.replace(/\D/g, '');
+      if (digits.length === 8) {
+        const year = parseInt(digits.slice(4, 8));
+        foundedYear = isNaN(year) ? null : year;
+      } else if (digits.length === 4) {
+        // Allow plain year entry as a fallback
+        const yr = parseInt(digits);
+        foundedYear = isNaN(yr) ? null : yr;
+      }
+    }
+
     const submitData = {
       ...formData,
       industry: formData.industry || null,
-      founded: formData.founded ? parseInt(formData.founded) : null,
+      founded: foundedYear,
       size: formData.size || null,
       location: formData.location, // Include location
     };
@@ -168,9 +203,7 @@ const CreateCompanyPage: React.FC = () => {
                 onChange={handleChange}
                 required
                 className="mt-1 block w-full rounded-md border border-gray-300 p-2.5 md:p-4 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                placeholder="mm/dd/yyyy"
-                onFocus={(e) => (e.target.type = 'date')}
-                onBlur={(e) => (e.target.type = 'text')}
+                placeholder="MM/DD/YYYY"
               />
             </div>
           </div>
