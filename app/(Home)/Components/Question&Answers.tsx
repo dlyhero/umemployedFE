@@ -69,7 +69,7 @@ const QuestionsAndAnswers = () => {
 
                 <div className="mt-12 text-center">
                     <p className="text-white/80 mb-2">
-                        Don't find the answer? We can help.{' '}
+                        Can't find the answer? We can help.{' '}
                         <button className="text-brand hover:text-green-600 font-medium underline transition-colors">
                             Click here
                         </button>

@@ -121,7 +121,7 @@
                           <input 
                       type="text" 
                         className="w-full p-8 pl-4 pr-10 outline-none text-gray-700 text-sm sm:text-base bg-white lg:border-r border-gray-300 rounded appearance-none"
-                      placeholder="Searcch job title"                   
+                      placeholder="Search job title"                   
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={handleKeyPress}
