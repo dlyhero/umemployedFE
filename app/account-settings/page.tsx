@@ -246,7 +246,7 @@ export default function AccountSettingsPage() {
 
           {/* Tabs */}
           <div className="mb-6 sm:mb-8">
-            <div className="border-b border-gray-200">
+            <div >
               <nav className="-mb-px flex flex-wrap gap-2 sm:gap-8">
                 {tabs.map((tab) => (
                   <button
@@ -257,7 +257,6 @@ export default function AccountSettingsPage() {
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                       }`}
                   >
-                    <Icon icon={tab.icon} width="18" height="18" className="mr-1 sm:mr-2" />
                     <span className="hidden sm:inline">{tab.label}</span>
                     <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
                   </button>
@@ -323,7 +322,7 @@ export default function AccountSettingsPage() {
                   <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
                     <div className="flex">
                       <Icon icon="material-symbols:info-outline" width="20" height="20" className="text-yellow-600 mr-2 mt-0.5" />
-                      <div className="text-sm text-yellow-800">
+                      <div className="text-base text-yellow-800">
                         <p className="font-medium">Password Requirements:</p>
                         <ul className="mt-1 list-disc list-inside">
                           <li>At least 8 characters long</li>
@@ -389,9 +388,9 @@ export default function AccountSettingsPage() {
                           </div>
 
                           {/* Benefits List */}
-                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                            <h4 className="font-medium text-blue-900 mb-2">Benefits of Google Meet Integration:</h4>
-                            <ul className="text-sm text-blue-800 space-y-1">
+                          <div className=" border rounded-lg p-4 mb-4">
+                            <h4 className="font-medium text-brand3 mb-2">Benefits of Google Meet Integration:</h4>
+                            <ul className="text-sm text-brand2 space-y-1">
                               <li>• Automatic calendar event creation for interviews</li>
                               <li>• Google Meet links generated automatically</li>
                               <li>• Email invitations sent to candidates</li>
@@ -401,7 +400,7 @@ export default function AccountSettingsPage() {
                           </div>
 
                           {/* Action Button */}
-                          <div className="flex gap-3">
+                          <div className="flex gap-3 self-end">
                             {googleConnection?.connected ? (
                               <div className="flex items-center gap-2 text-green-700">
                                 <Icon icon="solar:check-circle-bold" className="w-5 h-5" />
@@ -410,9 +409,8 @@ export default function AccountSettingsPage() {
                             ) : (
                               <button
                                 onClick={handleConnectGoogle}
-                                className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                className="px-6 py-2 bg-brand text-white  rounded-full hover:bg-brand2 transition-colors flex items-center gap-2"
                               >
-                                <Icon icon="logos:google-meet" className="w-4 h-4" />
                                 Connect Google Account
                               </button>
                             )}

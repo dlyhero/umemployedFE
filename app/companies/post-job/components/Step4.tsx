@@ -193,7 +193,7 @@ const Step4: React.FC<Step4Props> = ({ formData, updateFormData, form, createdJo
               updateFormData({ level: e.target.value });
               setValue('level', e.target.value);
             }}
-            className="w-full p-4 pr-10 border border-gray-300 rounded-lg bg-white appearance-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200"
+            className="w-full p-4 pr-10 border border-gray-300 rounded-lg bg-white appearance-none focus:border-brand focus:ring-2 focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200"
             disabled={isLoadingLevels}
           >
             <option value="">Select experience level</option>
