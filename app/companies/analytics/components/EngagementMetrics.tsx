@@ -46,7 +46,7 @@ const EngagementMetrics: React.FC<EngagementMetricsProps> = ({ engagement }) => 
 
       {/* Company Rating */}
       <div className="mb-6">
-        <div className={`border-${getRatingBgColor(engagement.avg_company_rating)} bg-white  border rounded-lg p-4`}>
+        <div className={`border-${getRatingBgColor(engagement.avg_company_rating)} border-2 bg-white rounded-lg p-4`}>
           <div className="flex items-center gap-3 mb-2">
             <span className="text-lg md:text-xl font-medium text-gray-800">Company Rating</span>
           </div>

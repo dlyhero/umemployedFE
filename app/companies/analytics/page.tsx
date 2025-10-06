@@ -121,7 +121,7 @@ export default function CompanyAnalyticsPage() {
           <h3 className="text-lg font-medium text-gray-900 mb-2">No Analytics Data</h3>
           <p className="text-gray-600 mb-4">No analytics data available for your company yet.</p>
           <button onClick={() => router.push('/companies/dashboard')}>
-            <Icon icon="solar:arrow-left-bold" className="w-4 h-4 mr-2" />
+            <Icon icon="mynaui:arrow-long-left" className='size-6' />
             Back to Dashboard
           </button>
         </div>
@@ -137,7 +137,7 @@ export default function CompanyAnalyticsPage() {
           onClick={() => router.push('/companies/dashboard')}
           className='mb-4 md:mb-8 flex items-center gap-2'
         >
-          <Icon icon="mynaui:arrow-long-left" className='size-6'/>
+          <Icon icon="mynaui:arrow-long-left" className='size-6' />
           Back to Dashboard
         </button>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 md:mb-4 md:mb-8 p-2">
@@ -215,7 +215,7 @@ export default function CompanyAnalyticsPage() {
         {/* Performance Alerts */}
         <div className="bg-white rounded-2xl p-6 border border-gray-100 ">
           <div className="flex items-center gap-3 mb-6">
-   
+
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-1">Performance Insights</h2>
               <p className="text-gray-600">Key insights and recommendations</p>
