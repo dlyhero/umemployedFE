@@ -34,7 +34,7 @@ const BlogSection: React.FC = () => {
             <Link 
               key={post.id} 
               href={`/blog/${post.id}`}
-              className="group bg-white rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg"
+              className="group bg-white rounded-l"
             >
               <div className="relative h-48 w-full bg-gray-200 min-h-[192px]">
                 {!imageErrors.has(post.id) ? (

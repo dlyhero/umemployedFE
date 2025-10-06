@@ -37,24 +37,21 @@ const EngagementMetrics: React.FC<EngagementMetricsProps> = ({ engagement }) => 
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-          <Icon icon="solar:heart-bold-duotone" className="w-5 h-5 text-orange-600" />
-        </div>
+   
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Engagement Metrics</h2>
-          <p className="text-sm text-gray-600">Candidate engagement and activity patterns</p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-1">Engagement Metrics</h2>
+          <p className="text-gray-600">Candidate engagement and activity patterns</p>
         </div>
       </div>
 
       {/* Company Rating */}
       <div className="mb-6">
-        <div className={`${getRatingBgColor(engagement.avg_company_rating)} border rounded-lg p-4`}>
+        <div className={`border-${getRatingBgColor(engagement.avg_company_rating)} bg-white  border rounded-lg p-4`}>
           <div className="flex items-center gap-3 mb-2">
-            <Icon icon="solar:star-bold" className={`w-5 h-5 ${getRatingColor(engagement.avg_company_rating)}`} />
-            <span className="text-sm font-medium text-gray-800">Company Rating</span>
+            <span className="text-lg md:text-xl font-medium text-gray-800">Company Rating</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`text-2xl font-bold ${getRatingColor(engagement.avg_company_rating)}`}>
+            <div className={`text-2xl md:text-4xl dm-serif ${getRatingColor(engagement.avg_company_rating)}`}>
               {engagement.avg_company_rating.toFixed(1)}
             </div>
             <div className="flex">
@@ -62,7 +59,7 @@ const EngagementMetrics: React.FC<EngagementMetricsProps> = ({ engagement }) => 
                 <Icon 
                   key={i}
                   icon={i < Math.floor(engagement.avg_company_rating) ? "solar:star-bold" : "solar:star-line-duotone"} 
-                  className={`w-4 h-4 ${getRatingColor(engagement.avg_company_rating)}`} 
+                  className={`size-6 ${getRatingColor(engagement.avg_company_rating)}`} 
                 />
               ))}
             </div>
@@ -84,7 +81,6 @@ const EngagementMetrics: React.FC<EngagementMetricsProps> = ({ engagement }) => 
               <div key={index} className="flex items-center gap-3">
                 <div className={`w-20 text-sm ${isMostActive ? 'font-bold text-brand' : 'text-gray-700'}`}>
                   {day.day}
-                  {isMostActive && <Icon icon="solar:crown-bold" className="w-3 h-3 ml-1 inline" />}
                 </div>
                 <div className="flex-1 bg-gray-200 rounded-full h-3 relative">
                   <div 
@@ -92,7 +88,7 @@ const EngagementMetrics: React.FC<EngagementMetricsProps> = ({ engagement }) => 
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
-                <div className="w-12 text-sm font-medium text-gray-900 text-right">
+                <div className="w-12 text-base md:text-lg font-medium text-gray-900 text-right">
                   {day.applications}
                 </div>
               </div>
@@ -108,8 +104,7 @@ const EngagementMetrics: React.FC<EngagementMetricsProps> = ({ engagement }) => 
       <div className="mb-6">
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Icon icon="solar:chart-2-bold" className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">Average Daily Applications</span>
+            <span className="text-base md:text-lg font-medium text-gray-700">Average Daily Applications</span>
           </div>
           <div className="text-xl font-bold text-gray-900">{engagement.avg_daily_applications.toFixed(1)}</div>
           <div className="text-xs text-gray-600">Based on last 30 days</div>
@@ -128,7 +123,7 @@ const EngagementMetrics: React.FC<EngagementMetricsProps> = ({ engagement }) => 
             
             return (
               <div key={index} className="flex items-center gap-3">
-                <div className="w-16 text-xs text-gray-600">
+                <div className="w-16 text-sm mdLtext-base text-gray-600">
                   {dayName} {date.getDate()}
                 </div>
                 <div className="flex-1 bg-gray-200 rounded-full h-2 relative">

@@ -159,23 +159,20 @@
                         onClick={() => setSearchQuery('Design')}
                         className="hover:text-white transition-colors cursor-pointer"
                       >
-                        Software Engineer
+                        Software Engineer,
                       </button>
-                      <span>,</span>
                       <button 
                         onClick={() => setSearchQuery('Art')}
                         className="hover:text-white transition-colors cursor-pointer"
                       >
-                        Artificial Intelligence
+                        Artificial Intelligence,
                       </button>
-                      <span>,</span>
                       <button 
                         onClick={() => setSearchQuery('Business')}
                         className="hover:text-white transition-colors cursor-pointer"
                       >
-                        Digital Marketing
+                        Digital Marketing,
                       </button>
-                      <span>,</span>
                       <button 
                         onClick={() => setSearchQuery('Video Editing')}
                         className="hover:text-white transition-colors cursor-pointer"

@@ -191,17 +191,16 @@ export default function ApplicationsPage() {
               ) : (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Icon icon="hugeicons:briefcase-06" className="w-8 h-8 text-gray-400" />
+                    <Icon icon="hugeicons:briefcase-06" className="size-28 md:size-32 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No Jobs Found</h3>
                   <p className="text-gray-600 mb-4">You haven't created any job postings yet.</p>
-                  <Button
+                  <button
                     onClick={() => router.push('/companies/post-job')}
-                    className="bg-brand hover:bg-brand/90 text-white"
+                    className="bg-brand hover:bg-brand/90 text-white px-12 py-4 rounded-full"
                   >
-                    <Icon icon="solar:add-circle-bold" className="w-4 h-4 mr-2" />
                     Create Your First Job
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>

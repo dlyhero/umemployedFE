@@ -215,12 +215,10 @@ export default function CompanyAnalyticsPage() {
         {/* Performance Alerts */}
         <div className="bg-white rounded-2xl p-6 border border-gray-100 ">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <Icon icon="solar:danger-triangle-bold-duotone" className="w-5 h-5 text-yellow-600" />
-            </div>
+   
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Performance Insights</h2>
-              <p className="text-sm text-gray-600">Key insights and recommendations</p>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-1">Performance Insights</h2>
+              <p className="text-gray-600">Key insights and recommendations</p>
             </div>
           </div>
 

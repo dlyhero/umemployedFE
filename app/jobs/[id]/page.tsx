@@ -102,7 +102,7 @@ export default function Page() {
       <HomeHeader />
       
       {/* Background Section */}
-      <div className="h-[42vh] bg-[url('/images/learn.png')] relative overflow-hidden">
+      <div className="h-[30vh] bg-brand3 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-42 h-42 border border-white/20 rounded-full"></div>

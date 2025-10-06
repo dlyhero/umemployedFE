@@ -12,7 +12,7 @@ export default function HowItWorks() {
                         </h1>
                     </div>
                     <h3 className='text-lg text-gray-700 my-4'>
-                        Streamline your job search or hiring process with our simple 4-step system
+                        Streamline your job search or hiring process with our simple 3-step system
                     </h3>
 
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-6 mt-12'>
