@@ -14,12 +14,12 @@ interface GeographicInsightsProps {
 
 const GeographicInsights: React.FC<GeographicInsightsProps> = ({ geographic }) => {
   const colors = [
-    'bg-blue-500',
+    'bg-brand',
     'bg-green-500',
     'bg-purple-500',
     'bg-orange-500',
     'bg-pink-500',
-    'bg-indigo-500',
+    'bg-brand3',
     'bg-red-500',
     'bg-yellow-500'
   ];
@@ -31,29 +31,26 @@ const GeographicInsights: React.FC<GeographicInsightsProps> = ({ geographic }) =
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-          <Icon icon="solar:map-point-bold-duotone" className="w-5 h-5 text-purple-600" />
-        </div>
+
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Geographic Insights</h2>
-          <p className="text-sm text-gray-600">Global reach and location preferences</p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-1">Geographic Insights</h2>
+          <p className="text-gray-600">Global reach and location preferences</p>
         </div>
       </div>
 
       {/* Remote Jobs Highlight */}
       <div className="mb-6">
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <Icon icon="solar:home-bold" className="w-5 h-5 text-purple-600" />
-            <span className="text-sm font-medium text-purple-800">Remote Work Percentage</span>
+        <div className="border border-brand3 rounded-lg p-4 flex flex-col">
+          <div className="flex items-center gap-3 ">
+            <span className="text-lg md:text-xl">Remote Work Percentage</span>
           </div>
-          <div className="text-2xl font-bold text-purple-900">{geographic.remote_jobs_percentage}%</div>
-          <div className="text-xs text-purple-700">
+              <div className="text-sm md:text-base text-brand">
             {geographic.remote_jobs_percentage > 50 
               ? "Remote-first company - Great for global talent!" 
               : "Balanced approach to remote and onsite work"
             }
           </div>
+          <div className="text-2xl md:text-4xl  dm-serif self-end">{geographic.remote_jobs_percentage}%</div>
         </div>
       </div>
 

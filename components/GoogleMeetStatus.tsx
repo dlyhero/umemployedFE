@@ -63,7 +63,7 @@ const GoogleMeetStatus: React.FC<GoogleMeetStatusProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={`p-4 ${className}`}>
+      <Card className={`p-4 ${className} shadow-none border-0`}>
         <div className="flex items-center gap-3">
           <Icon icon="eos-icons:loading" className="w-5 h-5 animate-spin text-gray-500" />
           <span className="text-sm text-gray-600">Checking Google Meet connection...</span>
@@ -74,7 +74,7 @@ const GoogleMeetStatus: React.FC<GoogleMeetStatusProps> = ({
 
   if (error) {
     return (
-      <Card className={`p-4 ${className}`}>
+      <Card className={`p-4 shadow-none border-0 ${className}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Icon icon="solar:danger-triangle-bold" className="w-5 h-5 text-red-500" />
@@ -92,16 +92,16 @@ const GoogleMeetStatus: React.FC<GoogleMeetStatusProps> = ({
   }
 
   return (
-    <Card className={`p-4 ${className}`}>
+    <Card className={`p-4 shadow-none  border-0 ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Icon 
             icon="logos:google-meet" 
-            className={`w-6 h-6 ${connection?.connected ? 'text-green-600' : 'text-gray-400'}`} 
+            className={`size-12 md:size-16 ${connection?.connected ? 'text-green-600' : 'text-gray-400'}`} 
           />
           <div>
             {showTitle && (
-              <div className="text-sm font-medium text-gray-900">Google Meet</div>
+              <div className="text-lg md:text-xl font-medium text-gray-900">Google Meet</div>
             )}
             <div className={`text-xs ${
               connection?.connected ? 'text-green-600' : 'text-gray-600'
@@ -118,29 +118,25 @@ const GoogleMeetStatus: React.FC<GoogleMeetStatusProps> = ({
               <span className="text-xs text-green-600">Ready</span>
             </div>
           ) : (
-            <Button 
+            <button 
               onClick={handleConnectGoogle}
-              size="sm"
-              className="text-xs"
+              className="text-brand border border-brand rounded-full px-3 py-1"
             >
-              <Icon icon="solar:link-bold" className="w-3 h-3 mr-1" />
               Connect
-            </Button>
+            </button>
           )}
           
-          <Button 
+          <button 
             onClick={handleRefresh}
-            variant="outline" 
-            size="sm"
             className="p-1"
           >
-            <Icon icon="solar:refresh-bold" className="w-3 h-3" />
-          </Button>
+            <Icon icon="solar:refresh-bold" className="size-6" />
+          </button>
         </div>
       </div>
       
       {!connection?.connected && (
-        <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
+        <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs md:text-sm text-yellow-800">
           <div className="flex items-start gap-2">
             <Icon icon="solar:info-circle-bold" className="w-3 h-3 mt-0.5 flex-shrink-0" />
             <div>

@@ -288,7 +288,7 @@ export default function HomeHeader() {
         ): profile?.is_recruiter && (
           <>
             {session && <Link
-              href={'/recruiter/post-job'}
+              href={'/companies/post-job'}
               className={`hidden lg:flex  rounded-full px-8 py-3.5 text-sm xl:text-[15px] transition-colors whitespace-nowrap ${isFixed
                 ? ' text-white bg-brand'
                 : isWhiteTextPath

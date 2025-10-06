@@ -271,13 +271,13 @@ export default function CompanyUpdatePage() {
   }
 
   return (
-    <div className="border-none min-[1220px]:border">
+    <div className="border-none min-[1220px]:border mb-20">
       <div className="lg:p-14 min-[1220px]:p-14">
          <button
           className='py-2 flex items-center gap-2 mb-10 cursor-pointer'
             onClick={() => router.push('/companies/dashboard')}
           >
-            <Icon icon="mynaui:arrow-long-left" className='size-6'/>
+            <Icon icon="mynaui:arrow-long-left" className='size-8'/>
             Back to Dashboard
           </button>
         {/* Header */}
@@ -570,9 +570,6 @@ export default function CompanyUpdatePage() {
           {/* Google Meet Integration Section */}
           <div className="bg-white rounded-2xl p-6 border border-gray-100">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Icon icon="logos:google-meet" className="w-6 h-6 text-blue-600" />
-              </div>
               <div>
                 <h2 className="text-xl tracking-wider font-bold text-gray-900">Google Meet Integration</h2>
                 <p className="text-sm md:text-[16px] mb-2 text-gray-600">Connect your Google Calendar for automatic interview scheduling</p>
@@ -581,12 +578,11 @@ export default function CompanyUpdatePage() {
 
             <div className="space-y-4">
               <GoogleMeetStatus />
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="border border-brand3 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                  <Icon icon="solar:info-circle-bold" className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm text-blue-800">
+                  <div className="text-base text-brand3">
                     <p className="font-medium mb-1">Benefits of Google Meet Integration:</p>
-                    <ul className="space-y-1 text-blue-700">
+                    <ul className="space-y-1 text-brand">
                       <li>• Automatic calendar event creation for interviews</li>
                       <li>• Google Meet links generated automatically</li>
                       <li>• Email invitations sent to candidates</li>

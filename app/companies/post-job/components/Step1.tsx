@@ -60,7 +60,7 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, form }) => {
           value={watchedValues?.title || ''}
           onChange={(e) => handleDirectInputChange('title', e.target.value)}
           className="mt-1 block w-full rounded-md border border-gray-300 p-2.5 md:p-4
-            focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50
+            focus:border-brand focus:ring focus:ring-blue-200 focus:ring-opacity-50
             transition-all duration-200"
           placeholder="e.g., Frontend Developer"
         />
@@ -80,7 +80,7 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, form }) => {
             value={watchedValues?.number_of_hires || ''}
             onChange={(e) => handleDirectInputChange('number_of_hires', e.target.value)}
             className="mt-1 block w-full rounded-md border border-gray-300 p-2.5 md:p-4
-              focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50
+              focus:border-brand focus:ring focus:ring-blue-200 focus:ring-opacity-50
               transition-all duration-200"
             min="1"
           />

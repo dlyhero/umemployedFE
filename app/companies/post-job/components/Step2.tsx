@@ -70,7 +70,7 @@ const Step2: React.FC<Step2Props> = ({ formData, updateFormData, form, createdJo
     label: string;
     name: string;
   }) => (
-    <label className="flex items-center p-3 rounded-full border-2 cursor-pointer transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 group">
+    <label className="flex items-center p-3 rounded-full border-2 cursor-pointer transition-all duration-200 hover:border-brand2 hover:bg-blue-50 group">
       <input
         type="radio"
         name={name}
@@ -82,7 +82,7 @@ const Step2: React.FC<Step2Props> = ({ formData, updateFormData, form, createdJo
         w-5 h-5 border-2 rounded-full flex items-center justify-center mr-3 transition-all duration-200
         ${selected 
           ? 'bg-brand border-none' 
-          : 'border-gray-300 group-hover:border-blue-400'
+          : 'border-gray-300 group-hover:border-brand2'
         }
       `}>
         {selected && (
