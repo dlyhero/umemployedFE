@@ -1,5 +1,21 @@
 import { PricingData, PricingPlan } from '@/types/pricing';
 
+// Dynamic pricing configuration sourced from environment variables with safe defaults.
+// This ensures prices are configurable per deployment without code edits.
+const dynamicPrices = {
+  job_seeker: {
+    basic: Number(process.env.NEXT_PUBLIC_PRICE_JOB_SEEKER_BASIC ?? 0),
+    standard: Number(process.env.NEXT_PUBLIC_PRICE_JOB_SEEKER_STANDARD ?? 9.99),
+    premium: Number(process.env.NEXT_PUBLIC_PRICE_JOB_SEEKER_PREMIUM ?? 19.99),
+  },
+  recruiter: {
+    basic: Number(process.env.NEXT_PUBLIC_PRICE_RECRUITER_BASIC ?? 0),
+    standard: Number(process.env.NEXT_PUBLIC_PRICE_RECRUITER_STANDARD ?? 29.99),
+    premium: Number(process.env.NEXT_PUBLIC_PRICE_RECRUITER_PREMIUM ?? 49.99),
+    custom: 0,
+  },
+} as const;
+
 // Note: Stripe price IDs are handled by the backend
 // Frontend only needs to send tier and user_type to the API
 
@@ -8,7 +24,7 @@ const jobSeekerPlans: PricingPlan[] = [
   {
     id: "basic",
     name: "Basic",
-    price: 0,
+    price: dynamicPrices.job_seeker.basic,
     currency: "$",
     period: "month",
     description: "Get started with job searching",
@@ -24,7 +40,7 @@ const jobSeekerPlans: PricingPlan[] = [
   {
     id: "standard",
     name: "Standard",
-    price: 9.99,
+    price: dynamicPrices.job_seeker.standard,
     currency: "$",
     period: "month",
     description: "Perfect for active job seekers",
@@ -42,7 +58,7 @@ const jobSeekerPlans: PricingPlan[] = [
   {
     id: "premium",
     name: "Premium",
-    price: 19.99,
+    price: dynamicPrices.job_seeker.premium,
     currency: "$",
     period: "month",
     description: "Maximum visibility and features",
@@ -64,7 +80,7 @@ const recruiterPlans: PricingPlan[] = [
   {
     id: "basic",
     name: "Basic",
-    price: 0,
+    price: dynamicPrices.recruiter.basic,
     currency: "$",
     period: "month",
     description: "Get started with hiring",
@@ -80,7 +96,7 @@ const recruiterPlans: PricingPlan[] = [
   {
     id: "standard",
     name: "Standard",
-    price: 29.99,
+    price: dynamicPrices.recruiter.standard,
     currency: "$",
     period: "month",
     description: "Ideal for small hiring teams",
@@ -98,7 +114,7 @@ const recruiterPlans: PricingPlan[] = [
   {
     id: "premium",
     name: "Premium",
-    price: 49.99,
+    price: dynamicPrices.recruiter.premium,
     currency: "$",
     period: "month",
     description: "Advanced tools for large teams",
@@ -116,7 +132,7 @@ const recruiterPlans: PricingPlan[] = [
   {
     id: "custom",
     name: "Custom",
-    price: 0,
+    price: dynamicPrices.recruiter.custom,
     currency: "Custom",
     period: "custom",
     description: "Tailored solutions for enterprise",
