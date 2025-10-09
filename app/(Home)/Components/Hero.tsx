@@ -131,7 +131,7 @@ const HeroSection = () => {
                   <div className="w-fit max-[640px]:w-full">
                     <button
                       onClick={handleSearch}
-                      className="w-full sm:w-auto  px-10 max-[640px]:p-4 py-10 bg-brand hover:bg-brand2 text-white font-bold text-base rounded-r- transition-colors duration-200"
+                      className="w-full sm:w-auto  px-10 max-[640px]:p-4 py-10 bg-brand hover:bg-brand2 text-white font-bold text-[16px] rounded-r- transition-colors duration-200"
                     >
                       SEARCH
                     </button>
