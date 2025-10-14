@@ -75,7 +75,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-8"
+              className="space-y-8 w-full"
             >
               {/* Main Headline */}
               <h1 className="text-4xl lg:text-7xl xl:text-7xl font-bold text-white leading-[0.9]">
@@ -93,16 +93,16 @@ const HeroSection = () => {
               </p>
 
               {/* Search Container */}
-              <div className="bg-white rounded  shadow-lg  min-[1200px]:min-w-[700px]  min-[1500px]:min-w-[900px] w-full">
-                <div className="flex flex-col sm:flex-row items-center ">
+              <div className="bg-white rounded shadow-lg w-full max-w-[600px]">
+                <div className="flex flex-col sm:flex-row items-center">
                   {/* Job Search Input */}
-                  <div className="flex-1 p-4 w-full">
+                  <div className="flex-1 p-3 w-full">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       What are you looking for?
                     </label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 text-gray-900 placeholder-gray-500 border-0 focus:outline-none text-base"
+                      className="w-full px-3 py-2 text-gray-900 placeholder-gray-500 border-0 focus:outline-none text-sm"
                       placeholder="Job title, keywords, or company"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -111,14 +111,14 @@ const HeroSection = () => {
                   </div>
 
                   {/* Category Dropdown */}
-                  <div className="flex-1 p-4 border-l border-gray-200 w-full">
+                  <div className="flex-1 p-3 border-l border-gray-200 w-full">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Category
                     </label>
                     <select
                       value={selectedCategory}
                       onChange={(e) => handleCategorySelect(e.target.value)}
-                      className="w-full px-3 py-2 text-gray-900 border-0 focus:outline-none text-base bg-white"
+                      className="w-full px-3 py-2 text-gray-900 border-0 focus:outline-none text-sm bg-white"
                     >
                       <option value="">All Categories</option>
                       {categories.map((category) => (
@@ -131,7 +131,7 @@ const HeroSection = () => {
                   <div className="w-fit max-[640px]:w-full">
                     <button
                       onClick={handleSearch}
-                      className="w-full sm:w-auto  px-10 max-[640px]:p-4 py-10 bg-brand hover:bg-brand2 text-white font-bold text-[16px] rounded-r- transition-colors duration-200"
+                      className="w-full sm:w-auto px-8 py-8 bg-brand hover:bg-brand2 text-white font-bold text-sm rounded-r transition-colors duration-200"
                     >
                       SEARCH
                     </button>
@@ -140,16 +140,16 @@ const HeroSection = () => {
               </div>
 
               {/* Popular Searches */}
-              <div className="flex  gap-3">
-                <span className="text-white font-medium text-sm md:text-base">Popular:</span>
-                <div className="flex flex-wrap gap-2">
-                  {['Software Engineer', 'Artificial Intelligence', 'Digital Marketing', 'React Developer'].map((term, index) => (
+              <div className="flex gap-3 items-center">
+                <span className="text-white font-medium text-sm md:text-base whitespace-nowrap">Popular:</span>
+                <div className="flex gap-2 flex-nowrap overflow-hidden">
+                  {['Software Engineer', 'Artificial Intelligence','React Developer'].map((term, index) => (
                     <button
                       key={term}
                       onClick={() => setSearchQuery(term)}
-                      className="text-white/60 hover:text-white transition-colors duration-200 text-sm md:text-base"
+                      className="text-white/60 hover:text-white transition-colors duration-200 text-sm md:text-base whitespace-nowrap"
                     >
-                      {term}{index < 3 ? ',' : ''}
+                      {term}{index < 2 ? ',' : ''}
                     </button>
                   ))}
                 </div>
@@ -159,23 +159,11 @@ const HeroSection = () => {
         </div>
 
         {/* Right Section - Image */}
-        <div className="hidden lg:block w-full min-[1195px]:w-1/2 relative  ">
-          {/* Background Pattern - Diagonal stripes */}
-          <div className="absolute top-0 right-0 w-[98%] h-full opacity-5 z-0">
-            <div className="w-full h-full" style={{
-              backgroundImage: `repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255,255,255) 10px,
-                rgba(255,255,255) 20px
-              )`
-            }}></div>
-          </div>
+        <div className="hidden lg:block w-full min-[1195px]:w-1/2 relative flex items-start justify-end rounded-lg">
           <img
             src="/images/pn.jpg"
             alt="Professional working environment"
-            className="h-full w-[90%] object-cover mt-10 z-0 absolute top-0 right-0"
+            className="h-[80vh] w-[90%] object-cover"
           />
         </div>
       </div>

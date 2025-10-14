@@ -264,13 +264,13 @@ export default function HomeHeader() {
       </div>
 
       <div className='hidden min-[950px]:block flex-1'>
-        <nav className='flex justify-center'>
+        <nav className='flex justify-start items-start pt-2 px-4 lg:px-8 xl:px-6'>
           <NavItems isWhite={isFixed ? true : isWhiteTextPath} />
         </nav>
       </div>
 
       <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-        <div className="mr-8"><Notifications /></div>
+        {session && <div className="mr-8"><Notifications /></div>}
         {profile?.is_applicant ? (
           <>
             {session && <Link

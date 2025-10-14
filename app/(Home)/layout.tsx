@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import HomeHeader from './Components/HomeHeader'
 import AuthRoute from "@/utility/AuthRoute";
+import { HomePageFooter } from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +31,8 @@ export default function HomeLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
        <AuthRoute type="public">
-
          {children}
-         {/* <Footer /> */}
+         <HomePageFooter />
        </AuthRoute>
       </div>
     </div>
