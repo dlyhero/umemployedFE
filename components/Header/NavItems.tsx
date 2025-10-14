@@ -106,7 +106,7 @@ const NavItems: React.FC<NavItemsProps> = ({ mobile, isWhite, onMobileItemClick 
 
   return (
     <div>
-      <ul className={`min-[950px]:flex items-center gap-15 ${mobile ? 'space-y-6' : ''} text-[17px] `}>
+      <ul className={`min-[950px]:flex min-[950px]:justify-between min-[950px]:w-full items-center gap-15 ${mobile ? 'space-y-6' : ''} text-[17px] leading-[0.9] font-bold`}>
         <li>
           <Link
             href="/"
